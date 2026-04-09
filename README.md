@@ -19,6 +19,10 @@ MARCHAND Aurélien - RENARD Théo
 Se placer à la racine et taper :
 
 ```bash
+# se placer dans le dossier du backend
+cd ./backend/RpgBackend
+
+# run le projet 
 ./mvnw spring-boot:run 
 ```
 
@@ -31,3 +35,15 @@ Prérequis pour la base de données :
 
 ## FrontEnd : 
 
+```bash
+# se placer dans le dossier rpg
+cd ./rpg
+
+# télécharger les dépendences
+npm install
+
+# lancer le front
+npm run dev
+```
+
+url du FrontEnd : http://localhost:5173/
