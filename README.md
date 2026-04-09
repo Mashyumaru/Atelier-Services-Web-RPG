@@ -5,9 +5,9 @@ MARCHAND Aurélien - RENARD Théo
 
 
 # Prochaines étapes : 
-**Liaison du backend et frontend**
-**Mise en place de test-CICD**
-**Clean Code**
+* **Liaison du backend et frontend**
+* **Mise en place de test-CICD**
+* **Clean Code**
 
 ---
 
