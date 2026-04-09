@@ -13,7 +13,7 @@ MARCHAND Aurélien - RENARD Théo
 
 Commande de lancement : 
 
-##Backend : 
+## Backend : 
 
 Se placer à la racine et taper :
 
@@ -24,6 +24,6 @@ Se placer à la racine et taper :
 url du swagger : http://localhost:8080/swagger-ui/index.html#/
 
 Prérequis pour la base de données : 
--> PostreSQL
--> Exécuter le bdd.sql pour mettre en place les bonnes tables
--> Mettre a jours le application properties avec les bonnes informations (user/pwd)
+*  PostreSQL
+*  Exécuter le bdd.sql pour mettre en place les bonnes tables
+*  Mettre a jours le application properties avec les bonnes informations (user/pwd)
