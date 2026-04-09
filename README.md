@@ -12,7 +12,7 @@ MARCHAND Aurélien - RENARD Théo
 
 ---
 
-Commande de lancement : 
+#Commande de lancement
 
 ## Backend : 
 
@@ -28,3 +28,6 @@ Prérequis pour la base de données :
 *  PostreSQL
 *  Exécuter le bdd.sql pour mettre en place les bonnes tables
 *  Mettre a jours le application properties avec les bonnes informations (user/pwd)
+
+## FrontEnd : 
+
