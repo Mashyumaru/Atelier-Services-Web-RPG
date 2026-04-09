@@ -12,7 +12,7 @@ MARCHAND Aurélien - RENARD Théo
 
 ---
 
-# Commande de lancement
+# Commandes de lancement
 
 ## Backend : 
 
