@@ -15,18 +15,18 @@ MARCHAND Aurélien - RENARD Théo
 
 ## Besoins
 
-Le but de ce porjet est de mettre en place un tableau de bord complet pour les Maîtres de jeux de Dongeons et Dragons. Pour cela, nous mettons en place un Dashboard avec différents métriques utiles pour les sessiosn :
+Le but de ce projet est de mettre en place un tableau de bord complet pour les Maîtres de jeux de Donjons et Dragons. Pour cela, nous mettons en place un Dashboard avec différents métriques utiles pour les sessions :
 * statistiques des joueurs
 * blocs notes
 * inventaire
 
-## WebServices
+## Web Services
 
 De plus nous aportons une dimensions interractive pour les MJ avec différents appels afin d'améliorer l'expérience utilisation : 
 
-* utilisation de https://5e-bits.github.io pour les sorts, les équipements et toues les informations utiles pour le MJ en lien avec D&D 5e éditions.
+* utilisation de https://5e-bits.github.io pour les sorts, les équipements et toutes les informations utiles pour le MJ en lien avec D&D 5e éditions.
 * utilsation de l'api Youtube pour ajouter des musiques d'ambiance
-* utilisaton de l'api OpenWeather pour rendre la météo des parties réalite en utilisant la météo de régions existantes
+* utilisaton de l'api OpenWeather pour rendre la météo des parties réaliste en utilisant la météo de régions existantes
 
 ---
 
