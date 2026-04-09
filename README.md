@@ -8,6 +8,7 @@ MARCHAND Aurélien - RENARD Théo
 * **Liaison du backend et frontend**
 * **Mise en place de test-CICD**
 * **Clean Code**
+* **Ajout BDD NoSQL**
 
 ---
 
