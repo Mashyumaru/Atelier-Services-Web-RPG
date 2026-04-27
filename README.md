@@ -24,7 +24,7 @@ Le but de ce projet est de mettre en place un tableau de bord complet pour les M
 
 De plus nous aportons une dimensions interractive pour les MJ avec différents appels afin d'améliorer l'expérience utilisation : 
 
-* utilisation de https://5e-bits.github.io pour les sorts, les équipements et toutes les informations utiles pour le MJ en lien avec D&D 5e éditions.
+* utilisation de https://github.com/5e-bits/5e-srd-api pour les sorts, les équipements et toutes les informations utiles pour le MJ en lien avec D&D 5e éditions.
 * utilsation de l'api Youtube pour ajouter des musiques d'ambiance
 * utilisaton de l'api OpenWeather pour rendre la météo des parties réaliste en utilisant la météo de régions existantes
 
