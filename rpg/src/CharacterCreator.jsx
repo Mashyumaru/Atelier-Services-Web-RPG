@@ -29,9 +29,10 @@ const CharacterCreator = () => {
     const fetchInitialData = async () => {
       try {
         const [raceRes, classRes] = await Promise.all([
-          fetch('https://localhost:8080/api/races'),
-          fetch('https://localhost:8080/api/classes')
+          fetch('http://localhost:8080/api/dnd/races'),
+          fetch('http://localhost:8080/api/dnd/classes')
         ]);
+        console.log(raceRes);
         const raceData = await raceRes.json();
         const classData = await classRes.json();
         setRaces(raceData.results);
@@ -45,18 +46,18 @@ const CharacterCreator = () => {
     fetchInitialData();
   }, []);
 
-  useEffect(() => {
-    if (character.race) {
-      fetch(`https://localhost:8080/api/races/${character.race}`)
-        .then(res => res.json())
-        .then(data => setSelectedRaceDetails(data));
-    }
-    if (character.class) {
-      fetch(`https://localhost:8080/api/classes/${character.class}`)
-        .then(res => res.json())
-        .then(data => setSelectedClassDetails(data));
-    }
-  }, [character.race, character.class]);
+   useEffect(() => {
+     if (character.race) {
+       fetch(`http://localhost:8080/api/races/${character.race}`)
+         .then(res => res.json())
+         .then(data => setSelectedRaceDetails(data));
+     }
+     if (character.class) {
+       fetch(`http://localhost:8080/api/classes/${character.class}`)
+         .then(res => res.json())
+         .then(data => setSelectedClassDetails(data));
+     }
+   }, [character.race, character.class]);
 
   const handleStatChange = (stat, delta) => {
     const currentScore = character.stats[stat];
@@ -79,7 +80,7 @@ const CharacterCreator = () => {
 
   const handleSave = async () => {
   try {
-    const response = await fetch('http://localhost:5000/api/characters', {
+    const response = await fetch('http://localhost:8080/api/characters', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
