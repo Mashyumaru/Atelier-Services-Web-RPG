@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        medieval: ['Grenze Gotisch', 'serif'],
+        medieval: ['Medieval', 'serif'],
       },
       colors: {
         sepia: {
@@ -19,10 +19,11 @@ export default {
           700: '#8c6239',
           800: '#6f4e30',
           900: '#513923',
-          950: '#312215',
+          950: '#261a10',
         },
         parchment: {
           100: '#fcf5e5',
+          200: '#f5ead2',
         }
       },
     },
