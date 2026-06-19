@@ -7,6 +7,8 @@ import fr.epsi.rpgbackend.entity.Character;
 import fr.epsi.rpgbackend.entity.CharacterEquipment;
 import fr.epsi.rpgbackend.entity.CharacterSpell;
 import fr.epsi.rpgbackend.repository.CharacterRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,7 @@ public class CharacterService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "characters", key = "'all'")
     public List<CharacterDto> findAll() {
         return characterRepository.findAll().stream()
                 .map(this::toDto)
@@ -31,17 +34,20 @@ public class CharacterService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "characters", key = "#id")
     public CharacterDto findById(Long id) {
         return characterRepository.findById(id)
                 .map(this::toDto)
                 .orElseThrow(() -> new NoSuchElementException("Personnage introuvable : " + id));
     }
 
+    @CacheEvict(value = "characters", allEntries = true)
     public CharacterDto create(CharacterDto dto) {
         Character character = toEntity(dto);
         return toDto(characterRepository.save(character));
     }
 
+    @CacheEvict(value = "characters", allEntries = true)
     public CharacterDto update(Long id, CharacterDto dto) {
         Character character = characterRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Personnage introuvable : " + id));
@@ -49,6 +55,7 @@ public class CharacterService {
         return toDto(characterRepository.save(character));
     }
 
+    @CacheEvict(value = "characters", allEntries = true)
     public void delete(Long id) {
         if (!characterRepository.existsById(id)) {
             throw new NoSuchElementException("Personnage introuvable : " + id);

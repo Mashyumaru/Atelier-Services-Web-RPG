@@ -48,12 +48,12 @@ const CharacterCreator = () => {
 
    useEffect(() => {
      if (character.race) {
-       fetch(`http://localhost:8080/api/races/${character.race}`)
+       fetch(`http://localhost:8080/api/dnd/races/${character.race}`)
          .then(res => res.json())
          .then(data => setSelectedRaceDetails(data));
      }
      if (character.class) {
-       fetch(`http://localhost:8080/api/classes/${character.class}`)
+       fetch(`http://localhost:8080/api/dnd/classes/${character.class}`)
          .then(res => res.json())
          .then(data => setSelectedClassDetails(data));
      }

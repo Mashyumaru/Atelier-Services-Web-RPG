@@ -8,7 +8,7 @@ const CharacterList = () => {
     // Replace with your local backend URL
     const fetchCharacters = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/characters');
+        const response = await fetch('http://localhost:8080/api/characters');
         const data = await response.json();
         setCharacters(data);
       } catch (err) {
