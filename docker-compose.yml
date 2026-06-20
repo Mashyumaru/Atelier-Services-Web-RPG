@@ -1,0 +1,109 @@
+version: '3.8'
+
+services:
+  # Backend Spring Boot
+  backend:
+    build:
+      context: ./Backend/RpgBackend
+      dockerfile: Dockerfile
+    container_name: rpg-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/rpg
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: "true"
+      SPRING_CACHE_TYPE: redis
+      SPRING_CACHE_REDIS_HOST: redis
+      SPRING_CACHE_REDIS_PORT: 6379
+    ports:
+      - "8080:8080"
+    networks:
+      - rpg-network
+
+  # Frontend React
+  frontend:
+    build:
+      context: ./rpg
+      dockerfile: Dockerfile
+    container_name: rpg-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./rpg:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+    networks:
+      - rpg-network
+
+  # PostgreSQL Database
+  db:
+    image: postgres:16-alpine
+    container_name: rpg-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: rpg
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./Backend/RpgBackend/bdd.sql:/docker-entrypoint-initdb.d/01-bdd.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d rpg"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - rpg-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: rpg-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - rpg-network
+
+  # Low-Code Database (ToolJet)
+  lowcode-db:
+    image: tooljet/tooljet-ce:latest
+    container_name: rpg-lowcode-db
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - TOOLJET_HOST=0.0.0.0
+      - TOOLJET_PORT=3000
+      - TOOLJET_DB_URI=postgresql://postgres:root@db:5432/rpg
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - rpg-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  rpg-network:
+    driver: bridge
