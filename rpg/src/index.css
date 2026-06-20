@@ -2,12 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
 @font-face {
   font-family: 'Medieval';
   src: url('/Medieval.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
+*/
 
 :root {
   --text: #6b6375;
@@ -22,7 +24,7 @@
   --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: 'Medieval', serif;
+  --heading: Georgia, 'Times New Roman', serif;
   --mono: ui-monospace, Consolas, monospace;
 
   font-size: 18px;

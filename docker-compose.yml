@@ -1,18 +1,13 @@
-version: '3.8'
 
 services:
   # Backend Spring Boot
   backend:
-    build:
-      context: ./Backend/RpgBackend
-      dockerfile: Dockerfile
+    image: new-rpg-backend
     container_name: rpg-backend
     restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
-      redis:
-        condition: service_started
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/rpg
       SPRING_DATASOURCE_USERNAME: postgres
@@ -21,9 +16,7 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
       SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: "true"
-      SPRING_CACHE_TYPE: redis
-      SPRING_CACHE_REDIS_HOST: redis
-      SPRING_CACHE_REDIS_PORT: 6379
+      SPRING_CACHE_TYPE: simple
     ports:
       - "8080:8080"
     networks:
@@ -38,11 +31,8 @@ services:
     restart: unless-stopped
     ports:
       - "5173:5173"
-    volumes:
-      - ./rpg:/app
-      - /app/node_modules
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
     depends_on:
       - backend
     networks:
@@ -94,11 +84,31 @@ services:
       - TOOLJET_HOST=0.0.0.0
       - TOOLJET_PORT=3000
       - TOOLJET_DB_URI=postgresql://postgres:root@db:5432/rpg
+      - TOOLJET_DB_USER=postgres
+      - TOOLJET_DB_PASS=root
+      - TOOLJET_DB_HOST=db
+      - TOOLJET_DB_PORT=5432
+      - TOOLJET_DB_NAME=rpg
+      - REDIS_URL=redis://redis:6379
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:root@db:5432/rpg?sslmode=disable
+      - PG_SSLMODE=disable
+      - SECRET_KEY_BASE=atelier-services-web-rpg-secret-key-2024-12345678901234567890
+      - JWT_SECRET=atelier-services-web-rpg-jwt-secret-key-2024-987654321
+      - LOCKBOX_MASTER_KEY=atelier-services-web-rpg-lockbox-key-2024-1234567890
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
     networks:
       - rpg-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
 
 volumes:
   postgres_data:

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const CharacterList = () => {
+  const navigate = useNavigate();
   const [characters, setCharacters] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -35,10 +37,17 @@ const CharacterList = () => {
           Adventurer Registry
         </h1>
         <div className="h-1 w-40 bg-sepia-700 mx-auto mt-4"></div>
+        
+        <button
+          onClick={() => navigate('/create')}
+          className="mt-6 bg-sepia-900 text-parchment-100 px-8 py-3 rounded font-bold text-lg hover:bg-sepia-950 shadow-lg transition-transform active:scale-95 uppercase tracking-widest"
+        >
+          + Register New Hero
+        </button>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-        {characters.map((char) => (
+        {(characters || []).map((char) => (
           <div 
             key={char.id} 
             className="bg-parchment-100 border-2 border-sepia-700 p-6 shadow-parchment relative hover:-translate-y-1 transition-all duration-300"
@@ -52,14 +61,35 @@ const CharacterList = () => {
             <h2 className="text-3xl font-bold text-sepia-950 border-b-2 border-sepia-300 mb-2 truncate pt-2">
               {char.name || "Unknown Hero"}
             </h2>
+            
+            {char.playerName && (
+              <p className="text-sm font-sans text-sepia-600 mb-3">
+                Played by: <span className="italic">{char.playerName}</span>
+              </p>
+            )}
 
             <div className="flex justify-between font-sans italic text-sepia-700 mb-6 text-sm uppercase font-bold tracking-tighter">
-              <span>{char.race}</span>
-              <span>{char.class}</span>
+              <span>{char.raceIndex || 'Unknown'}</span>
+              <span>{char.classIndex || 'Unknown'}</span>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 mb-4">
+              <div className="bg-sepia-200/50 border border-sepia-300 rounded p-2 text-center">
+                <div className="text-[10px] font-sans font-black text-sepia-600 uppercase leading-none">HP</div>
+                <div className="text-lg font-bold text-sepia-950">{char.hpCurrent}/{char.hpMax}</div>
+              </div>
+              <div className="bg-sepia-200/50 border border-sepia-300 rounded p-2 text-center">
+                <div className="text-[10px] font-sans font-black text-sepia-600 uppercase leading-none">AC</div>
+                <div className="text-lg font-bold text-sepia-950">{char.armorClass}</div>
+              </div>
+              <div className="bg-sepia-200/50 border border-sepia-300 rounded p-2 text-center">
+                <div className="text-[10px] font-sans font-black text-sepia-600 uppercase leading-none">SPD</div>
+                <div className="text-lg font-bold text-sepia-950">{char.speed}'</div>
+              </div>
             </div>
 
             <div className="grid grid-cols-3 gap-3 mb-6">
-              {Object.entries(char.stats).map(([ability, value]) => (
+              {Object.entries(char.stats || {}).map(([ability, value]) => (
                 <div key={ability} className="bg-sepia-200/50 border border-sepia-300 rounded p-2 text-center">
                   <div className="text-[10px] font-sans font-black text-sepia-600 uppercase leading-none">
                     {ability}
@@ -69,7 +99,7 @@ const CharacterList = () => {
               ))}
             </div>
 
-            <div className="bg-white/40 p-3 rounded border border-dashed border-sepia-400 min-h-[80px]">
+            <div className="bg-white/40 p-3 rounded border border-dashed border-sepia-400 min-h-[60px]">
               <span className="text-[10px] uppercase font-bold text-sepia-500 block mb-1">Chronicle:</span>
               <p className="text-sm font-sans italic text-sepia-800 line-clamp-3 leading-tight">
                 {char.notes || "No tales yet told of this wanderer..."}

@@ -29,16 +29,17 @@ const CharacterCreator = () => {
     const fetchInitialData = async () => {
       try {
         const [raceRes, classRes] = await Promise.all([
-          fetch('http://localhost:8080/api/dnd/races'),
-          fetch('http://localhost:8080/api/dnd/classes')
+          fetch('https://www.dnd5eapi.co/api/2014/races'),
+          fetch('https://www.dnd5eapi.co/api/2014/classes')
         ]);
-        console.log(raceRes);
         const raceData = await raceRes.json();
         const classData = await classRes.json();
-        setRaces(raceData.results);
-        setClasses(classData.results);
+        setRaces(raceData.results || []);
+        setClasses(classData.results || []);
       } catch (err) {
         console.error("API Fetch Error:", err);
+        setRaces([]);
+        setClasses([]);
       } finally {
         setLoading(false);
       }
@@ -48,12 +49,12 @@ const CharacterCreator = () => {
 
    useEffect(() => {
      if (character.race) {
-       fetch(`http://localhost:8080/api/dnd/races/${character.race}`)
+       fetch(`https://www.dnd5eapi.co/api/2014/races/${character.race}`)
          .then(res => res.json())
          .then(data => setSelectedRaceDetails(data));
      }
      if (character.class) {
-       fetch(`http://localhost:8080/api/dnd/classes/${character.class}`)
+       fetch(`https://www.dnd5eapi.co/api/2014/classes/${character.class}`)
          .then(res => res.json())
          .then(data => setSelectedClassDetails(data));
      }
@@ -80,22 +81,48 @@ const CharacterCreator = () => {
 
   const handleSave = async () => {
   try {
+    // Mapper les stats du format {STR: val} vers statStr, statDex, etc.
+    const statFields = {
+      STR: 'statStr',
+      DEX: 'statDex', 
+      CON: 'statCon',
+      INT: 'statInt',
+      WIS: 'statWis',
+      CHA: 'statCha'
+    };
+    
+    const characterData = {
+      name: character.name,
+      playerName: character.playerName || '',
+      raceIndex: character.race,
+      classIndex: character.class,
+      level: character.level,
+      hpMax: hp,
+      hpCurrent: hp,
+      armorClass: ac,
+      speed: selectedRaceDetails?.speed || 30,
+      statStr: character.stats.STR,
+      statDex: character.stats.DEX,
+      statCon: character.stats.CON,
+      statInt: character.stats.INT,
+      statWis: character.stats.WIS,
+      statCha: character.stats.CHA,
+      notes: character.notes || '',
+      equipment: [],
+      spells: []
+    };
+
     const response = await fetch('http://localhost:8080/api/characters', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...character,
-        hp,
-        ac,
-        speed: selectedRaceDetails?.speed || 0
-      })
+      body: JSON.stringify(characterData)
     });
 
     if (response.ok) {
-      // Si la réponse est positive (Status 200-299), on redirige vers la liste
       navigate('/'); 
     } else {
-      console.error("The scribe failed to record the scroll.");
+      const errorData = await response.json();
+      console.error("The scribe failed to record the scroll:", errorData);
     }
   } catch (err) {
     console.error("Connection to the archives lost:", err);
