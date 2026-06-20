@@ -1,13 +1,11 @@
+version: '3.8'
 
 services:
-  # Backend Spring Boot
+  # ==================== BACKEND ====================
   backend:
-    image: new-rpg-backend
+    build: ./Backend/RpgBackend
     container_name: rpg-backend
     restart: unless-stopped
-    depends_on:
-      db:
-        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/rpg
       SPRING_DATASOURCE_USERNAME: postgres
@@ -19,26 +17,25 @@ services:
       SPRING_CACHE_TYPE: simple
     ports:
       - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
     networks:
       - rpg-network
 
-  # Frontend React
+  # ==================== FRONTEND ====================
   frontend:
-    build:
-      context: ./rpg
-      dockerfile: Dockerfile
+    build: ./rpg
     container_name: rpg-frontend
     restart: unless-stopped
     ports:
       - "5173:5173"
-    environment:
-      - NODE_ENV=production
     depends_on:
       - backend
     networks:
       - rpg-network
 
-  # PostgreSQL Database
+  # ==================== POSTGRESQL ====================
   db:
     image: postgres:16-alpine
     container_name: rpg-db
@@ -51,64 +48,23 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./Backend/RpgBackend/bdd.sql:/docker-entrypoint-initdb.d/01-bdd.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d rpg"]
       interval: 5s
       timeout: 5s
       retries: 10
-      start_period: 10s
     networks:
       - rpg-network
 
-  # Redis Cache
+  # ==================== REDIS ====================
   redis:
     image: redis:7-alpine
     container_name: rpg-redis
     restart: unless-stopped
-    ports:
-      - "6379:6379"
     volumes:
       - redis_data:/data
     networks:
       - rpg-network
-
-  # Low-Code Database (ToolJet)
-  lowcode-db:
-    image: tooljet/tooljet-ce:latest
-    container_name: rpg-lowcode-db
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    environment:
-      - TOOLJET_HOST=0.0.0.0
-      - TOOLJET_PORT=3000
-      - TOOLJET_DB_URI=postgresql://postgres:root@db:5432/rpg
-      - TOOLJET_DB_USER=postgres
-      - TOOLJET_DB_PASS=root
-      - TOOLJET_DB_HOST=db
-      - TOOLJET_DB_PORT=5432
-      - TOOLJET_DB_NAME=rpg
-      - REDIS_URL=redis://redis:6379
-      - NODE_ENV=production
-      - DATABASE_URL=postgresql://postgres:root@db:5432/rpg?sslmode=disable
-      - PG_SSLMODE=disable
-      - SECRET_KEY_BASE=atelier-services-web-rpg-secret-key-2024-12345678901234567890
-      - JWT_SECRET=atelier-services-web-rpg-jwt-secret-key-2024-987654321
-      - LOCKBOX_MASTER_KEY=atelier-services-web-rpg-lockbox-key-2024-1234567890
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_started
-    networks:
-      - rpg-network
-    healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 60s
 
 volumes:
   postgres_data:

@@ -65,3 +65,6 @@ npm run dev
 ```
 
 url du FrontEnd : http://localhost:5173/
+
+
+Pour toutes demandes d'accès à la production, Merci de nous contacter à l'email : theo.renard@ecoles-epsi.net en raison du cout de déploement et des ips dynamiques
